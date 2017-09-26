@@ -18,9 +18,10 @@ interface Document {
 }
 
 const prepareEntryForTransport = (entry: Document) => ({ ...entry, body: JSON.stringify(entry.body) });
+const documentRef = (databaseName: string, id: string) => database.ref(`data/${databaseName}/documents/${id}`);
 
-export const documents = (): Promise<DocumentResult[]> =>
-  database.ref('documents').once('value')
+export const documents = (databaseName: string): Promise<DocumentResult[]> =>
+  database.ref(`data/${databaseName}/documents`).once('value')
     .then((snap: firebase.database.DataSnapshot) => {
       if (snap.exists()) {
         const value = snap.val();
@@ -29,8 +30,8 @@ export const documents = (): Promise<DocumentResult[]> =>
       return [];
     });
 
-export const documentByID = (id: string): Promise<DocumentResult> =>
-  database.ref(`documents/${id}`).once('value')
+export const documentByID = (databaseName: string, id: string): Promise<DocumentResult> =>
+  documentRef(databaseName, id).once('value')
     .then((snap: firebase.database.DataSnapshot) => {
       if (snap.exists()) {
         return prepareEntryForTransport(snap.val());
@@ -38,8 +39,8 @@ export const documentByID = (id: string): Promise<DocumentResult> =>
       throw new Error('Not found');
     });
 
-export const addDocument = (id: string, body: string, rev?: string): Promise<DocumentResult> => {
-  const ref = database.ref(`documents/${id}`);
+export const addDocument = (databaseName: string, id: string, body: string, rev?: string): Promise<DocumentResult> => {
+  const ref = documentRef(databaseName, id);
   return ref.once('value')
     .then((snap: firebase.database.DataSnapshot) => {
       if (snap.exists()) {
@@ -55,5 +56,26 @@ export const addDocument = (id: string, body: string, rev?: string): Promise<Doc
         body: JSON.parse(body),
       };
       return ref.set(entry).then(() => ({ ...entry, body }));
+    });
+};
+
+export const deleteDocument = (databaseName: string, id: string, rev: string): Promise<DocumentResult> => {
+  const ref = documentRef(databaseName, id);
+  return ref.once('value')
+    .then((snap: firebase.database.DataSnapshot) => {
+      if (!snap.exists()) {
+        throw new Error('Not found');
+      }
+      const current = snap.val();
+      if (current.rev !== rev) {
+        throw new Error('Revision conflict: ' + current.rev);
+      }
+      const newRevSequenceNumber = calculateRevisionID('', rev);
+      const entry = {
+        id,
+        rev: newRevSequenceNumber,
+        deleted: true,
+      };
+      return ref.set(entry).then(() => entry);
     });
 };

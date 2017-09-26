@@ -1,13 +1,8 @@
 import { buildSchema } from 'graphql';
-import { documents, documentByID, addDocument } from './database/firebase/firebaseService';
-
-export interface DocumentResult {
-  id: string;
-  rev: string;
-  body: string;
-}
+import { documents, documentByID, addDocument, deleteDocument } from './database/firebase/firebaseService';
 
 export const schema = buildSchema(`
+
 type Document {
   id: ID!
   rev: String
@@ -19,24 +14,60 @@ type DocumentMutationResult {
   rev: String
 }
 
-type Query {
+type Database {
   documents: [Document]
   document(id: ID!): Document!
 }
 
+input DatabaseInput {
+  name: String!
+}
+
+type Query {
+  database(name: String!): Database
+}
+
 type Mutation {
-  addDocument(id: ID!, body: String!, rev: String): DocumentMutationResult
+  addDocument(database: DatabaseInput, id: ID!, body: String!, rev: String): DocumentMutationResult
+  deleteDocument(database: DatabaseInput, id: ID!, rev: String!): DocumentMutationResult
 }
 
 schema {
   query: Query
   mutation: Mutation
 }
+
 `);
 
-export const root = {
-  documents,
-  document: ({ id }: { id: string }) => documentByID(id),
+export interface DocumentResult {
+  id: string;
+  rev: string;
+  body?: string;
+  deleted?: boolean;
+}
 
-  addDocument: ({ id, body, rev }: { id: string, body: string, rev?: string }) => addDocument(id, body, rev),
+interface DatabaseInputParam {
+  name: string;
+}
+
+interface AddDocumentInputParams {
+  database: DatabaseInputParam;
+  id: string;
+  body: string;
+  rev?: string;
+}
+
+interface DeleteDocumentInputParams {
+  database: DatabaseInputParam;
+  id: string;
+  rev: string;
+}
+
+export const root = {
+  database: ({ name }: { name: string }) => ({
+    documents: documents(name),
+    document: ({ id }: { id: string }) => documentByID(name, id),
+  }),
+  addDocument: ({ database, id, body, rev }: AddDocumentInputParams) => addDocument(database.name, id, body, rev),
+  deleteDocument: ({ database, id, rev }: DeleteDocumentInputParams) => deleteDocument(database.name, id, rev),
 };
