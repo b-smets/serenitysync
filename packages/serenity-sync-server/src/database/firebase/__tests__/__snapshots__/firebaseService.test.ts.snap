@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Firebase Service documents obtains a list of documents from the firebase 1`] = `
+Array [
+  Object {
+    "body": "{\\"three\\":\\"delta\\",\\"four\\":\\"epsilon\\",\\"five\\":\\"omega\\"}",
+    "id": "bar",
+    "rev": "2-def",
+  },
+  Object {
+    "body": "{\\"one\\":\\"alpha\\",\\"two\\":\\"beta\\",\\"three\\":\\"gamma\\"}",
+    "id": "foo",
+    "rev": "1-abc",
+  },
+]
+`;
