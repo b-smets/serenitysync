@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+  - "8"
+
+cache:
+  yarn: true
+  directories:
+    - node_modules
+    - packages/serenity-sync-server/node_modules
+    - packages/serenity-sync-web/node_modules
+
+install:
+  - yarn install
+  - yarn run bootstrap
+
+before_script:
+  - mkdir packages/serenity-sync-server/config
+  - echo {} > packages/serenity-sync-server/config/firebase.json
+
+script:
+  - yarn run build
+  - yarn run test
