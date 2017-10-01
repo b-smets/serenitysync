@@ -5,7 +5,8 @@ declare module 'firebase-mock' {
   interface MockFirebase extends firebaseAdmin.database.Database {
     new (path?: string, data?: any): MockFirebase;
     autoFlush: (autoFlush: boolean) => void;
-    data: any;
+    failNext: (event: string, error: Error) => void;
+    getData: () => any;
   }
   export const MockFirebase: MockFirebase;
 
