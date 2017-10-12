@@ -1,15 +1,16 @@
 import * as express from 'express';
 import * as graphqlHTTP from 'express-graphql';
-import { schema, root } from './schema';
+import { DocumentService } from './document/documentService';
+import { createSchemaRoot, schema } from './schema';
+import { FirebaseStore } from './store/firebase/firebaseStore';
 
-const port = 3000;
-
+const documentService = new DocumentService(new FirebaseStore());
 const app = express();
 
 app.use('/graphql', graphqlHTTP({
   schema,
-  rootValue: root,
+  rootValue: createSchemaRoot(documentService),
   graphiql: true,
 }));
 
-app.listen(port);
+app.listen(3000);

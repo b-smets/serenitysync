@@ -1,5 +1,5 @@
 import { buildSchema } from 'graphql';
-import { documents, documentByID, addDocument, deleteDocument } from './database/firebase/firebaseService';
+import { DocumentService } from './document/documentService';
 
 export const schema = buildSchema(`
 
@@ -63,11 +63,13 @@ interface DeleteDocumentInputParams {
   rev: string;
 }
 
-export const root = {
+export const createSchemaRoot = (documentService: DocumentService) => ({
   database: ({ name }: { name: string }) => ({
-    documents: documents(name),
-    document: ({ id }: { id: string }) => documentByID(name, id),
+    documents: documentService.allDocuments(name),
+    document: ({ id }: { id: string }) => documentService.document(name, id),
   }),
-  addDocument: ({ database, id, body, rev }: AddDocumentInputParams) => addDocument(database.name, id, body, rev),
-  deleteDocument: ({ database, id, rev }: DeleteDocumentInputParams) => deleteDocument(database.name, id, rev),
-};
+  addDocument: ({ database, id, body, rev }: AddDocumentInputParams) => 
+    documentService.addDocument(database.name, id, body, rev),
+  deleteDocument: ({ database, id, rev }: DeleteDocumentInputParams) => 
+    documentService.deleteDocument(database.name, id, rev),
+});

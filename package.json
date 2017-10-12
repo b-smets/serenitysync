@@ -1,7 +1,7 @@
 {
 	"name": "serenity-sync",
 	"version": "0.1.0",
-	"license": "MIT",	
+	"license": "MIT",
 	"scripts": {
 		"bootstrap": "lerna bootstrap",
 		"build": "lerna run build --stream",

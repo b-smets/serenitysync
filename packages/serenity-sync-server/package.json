@@ -32,19 +32,26 @@
     "gulp-tslint": "^8.1.2",
     "gulp-typescript": "^3.2.2",
     "jest": "^21.2.1",
-    "merge2": "^1.2.0"
+    "merge2": "^1.2.0",
+    "ts-jest": "^21.1.2"
   },
   "jest": {
+    "automock": true,
+    "mapCoverage": true,
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
+      "js",
+      "jsx",
+      "json"
     ],
     "transform": {
-      "^.+\\.(ts|tsx)$": "<rootDir>/jest/preprocessor.js"
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testMatch": [
-      "**/__tests__/*.(ts|tsx|js)"
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/color-convert",
+      "<rootDir>/node_modules/jest-config"
     ]
   }
 }

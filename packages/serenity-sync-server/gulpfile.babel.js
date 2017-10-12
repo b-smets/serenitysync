@@ -20,8 +20,8 @@ gulp.task('copy-config', () => {
 gulp.task('build', ['lint', 'copy-config'], () => {
   const tsResult = gulp.src(['src/**/*.ts', 'src/**/*.tsx', '!src/**/__tests__/*', '!src/**/__mocks__/*'])
     .pipe(tsProject());
-  
-  return merge([ 
+
+  return merge([
     tsResult.dts.pipe(gulp.dest('build/definitions')),
     tsResult.js.pipe(gulp.dest('build/js'))
   ]);

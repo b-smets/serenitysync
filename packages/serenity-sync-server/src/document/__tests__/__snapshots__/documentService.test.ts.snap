@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DocumentService addDocument returns the newly added revision 1`] = `
+Object {
+  "body": "{\\"one\\":\\"alpha\\",\\"two\\":\\"beta\\",\\"three\\":\\"gamma\\"}",
+  "id": "foo",
+  "rev": "5-xyz",
+}
+`;
+
+exports[`DocumentService allDocuments obtains a list of all documents in the store 1`] = `
+Array [
+  Object {
+    "body": "{\\"one\\":\\"alpha\\",\\"two\\":\\"beta\\",\\"three\\":\\"gamma\\"}",
+    "id": "foo",
+    "rev": "1-abc",
+  },
+  Object {
+    "body": "{\\"three\\":\\"delta\\",\\"four\\":\\"epsilon\\",\\"five\\":\\"omega\\"}",
+    "id": "bar",
+    "rev": "2-def",
+  },
+]
+`;
+
+exports[`DocumentService deleteDocument returns the delete revision 1`] = `
+Object {
+  "deleted": true,
+  "id": "foo",
+  "rev": "5-xyz",
+}
+`;
+
+exports[`DocumentService document retrieves the document with given id from the store 1`] = `
+Object {
+  "body": "{\\"one\\":\\"alpha\\",\\"two\\":\\"beta\\",\\"three\\":\\"gamma\\"}",
+  "id": "foo",
+  "rev": "1-abc",
+}
+`;
