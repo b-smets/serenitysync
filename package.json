@@ -5,9 +5,13 @@
 	"scripts": {
 		"bootstrap": "lerna bootstrap",
 		"build": "lerna run build --stream",
-		"test": "lerna run test --stream"
+		"test": "lerna run test --stream",
+		"test:coverage": "CI=true lerna run test:coverage --stream && istanbul report",
+		"coverage:publish": "cat ./coverage/lcov.info | coveralls"
 	},
 	"devDependencies": {
+		"coveralls": "^3.0.0",
+		"istanbul": "^0.4.5",
 		"lerna": "^2.2.0",
 		"tslint": "^5.7.0",
 		"typescript": "^2.5.2"
